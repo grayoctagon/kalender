@@ -15,8 +15,17 @@ is partially german, partially english
 	+ abhängig von Tags Farben/icons/design definieren kann.
 - Wochenansicht
 
-## Example Picture
+## Example Pictures
+
+so sieht es für nicht angemeldete User aus:
 ![Screenshot vom Kalender ohne angemeldet zu sein](/assetsForGit/exampleViewForNotLoggedInUsers.png)
+
+so sieht der login aus:
+![Screenshot vom Kalender ohne angemeldet zu sein](/assetsForGit/login.png)
+
+so sieht es aus wenn man ein Event erstellt: (wenn man angemeldet ist)
+![Screenshot vom Kalender ohne angemeldet zu sein](/assetsForGit/editEvent.png)
+
 
 
 ## License: 
