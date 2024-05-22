@@ -1,0 +1,9 @@
+{
+    "users": {
+        "youruserlogin": {
+            "pwhash": "see https://www.php.net/manual/en/function.password-hash.php and https://www.php.net/manual/en/function.password-verify.php",
+            "successfullLogins": {
+            }
+        }
+    }
+}

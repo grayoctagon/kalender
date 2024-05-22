@@ -1,8 +1,10 @@
 <?php
 $jear=date("Y");
 $month=date("n");
+include(__DIR__."/events.php");
 
 $selected_day=0;
+$selected_date=0;
 
 if(isset($_GET["j"])&&isset($_GET["m"])){
 	$j=intval($_GET["j"]);
@@ -18,6 +20,7 @@ if(isset($_GET["d"])){
 	$d=intval($_GET["d"]);
 	if($d>0&&$d<32){
 		$selected_day=$d;
+		$selected_date=date('Y-m-d',dateStringToStamp($jear."-".$month."-".$selected_day));
 	}
 }
 
@@ -49,6 +52,11 @@ $aktuellesMonatText=getMonthText($month)." ".$jear;
 
 
 $note="";
+if($userName){
+	$note="angemeldet als $userName ";
+}else{
+	$note="nicht angemeldet";
+}
 
 
 
@@ -79,17 +87,16 @@ if($month>=12){
 
 //### events
 $eventsAll=array();
-$eventsView=array();
+$eventsToView=array();
 {
 	global $eventsAll;
-	global $eventsView;
+	global $eventsToView;
 	global $jear;
 	global $month;
 	global $selected_day;
-	include(__DIR__."/events.php");
-	$eventsAll=getAllEvents();
+	$eventsAll=get2AllEvents();
 	if($selected_day!=0){
-		$eventsView=getEventsOn($eventsAll,$jear,$month,$selected_day);
+		$eventsToView=getEventsOn("$jear-$month-$selected_day");
 	}
 }
 
@@ -109,8 +116,9 @@ while($wochentag>0){
 	$day["number"]=$montatstag-($wochentag-1);
 	$day["month"]=$letztesMonatInt;
 	$day["jear"]=$letztesMonatJahr;
+	$day["date"]=date("Y-m-d",dateStringToStamp($day["jear"].'-'.$day["month"].'-'.$day["number"]));
 	$day["opacity"]=0.5;
-	$day["events"]=(getEventsOn($eventsAll,$day["jear"],$day["month"],$day["number"]));
+	$day["events"]=getEventsOn($day["date"]);
 	$myDays[]=$day;
 	
 	
@@ -124,8 +132,9 @@ while($i<=$letzterTag){
 	$day["number"]=$i;
 	$day["month"]=$month;
 	$day["jear"]=$jear;
+	$day["date"]=date("Y-m-d",dateStringToStamp($day["jear"].'-'.$day["month"].'-'.$day["number"]));
 	$day["opacity"]=1;
-	$day["events"]=(getEventsOn($eventsAll,$day["jear"],$day["month"],$day["number"]));
+	$day["events"]=getEventsOn($day["date"]);
 	
 	$myDays[]=$day;
 	
@@ -145,8 +154,9 @@ while($i <= $draw){
 	$day["number"]=$i;
 	$day["month"]=$naechstesMonatInt;
 	$day["jear"]=$naechstesMonatJahr;
+	$day["date"]=date("Y-m-d",dateStringToStamp($day["jear"].'-'.$day["month"].'-'.$day["number"]));
 	$day["opacity"]=0.5;
-	$day["events"]=(getEventsOn($eventsAll,$day["jear"],$day["month"],$day["number"]));
+	$day["events"]=getEventsOn($day["date"]);
 	
 	$myDays[]=$day;
 	
@@ -180,19 +190,33 @@ function drawDays(){
 			//events
 			$eventCount=count($day["events"]);
 			$eventNum=0;
-			foreach($day["events"] as $ev){
+			foreach($day["events"] as $id=>$ev){
 				$str1="";
 				$str2="";
-				if($eventNum<4){
-					$str1=$ev["uhrzeit_stunde"].":".$ev["uhrzeit_minute"];
+				if($eventNum<7){
+					//$str1=$ev["uhrzeit_stunde"].":".$ev["uhrzeit_minute"];
+					$str1="";
+					if(str_starts_with($ev["start"],$day["date"])){
+						$str1=date('H:i',datetimeStringToStamp($ev["start"]));
+					}else{
+						$str1="...";
+					}
+					$str1.="-";
+					if(str_starts_with($ev["ende"],$day["date"])){
+						$str1.=date('H:i',datetimeStringToStamp($ev["ende"]));
+					}else{
+						$str1.="...";
+					}
 					$str2=umlaute($ev["name"]);
-				}else if($eventNum==4){
+				}else if($eventNum==7){
 					$str1='.. '.($eventCount-($eventNum))." more Events";
 				}
-				echo('<text x="'.($x+3).'" y="'.($y+13+13+($eventNum*14)).'" font-family="Arial" font-size="10">'.$str1.'</text>'."\n");
+				//echo('<text x="'.($x+3).'" y="'.($y+13+13+($eventNum*14)).'" font-family="Arial" font-size="10">'.$str1.'</text>'."\n");
 				//echo('<text x="'.($x+30).'" y="'.($y+13+13+($eventNum*14)).'" font-family="Arial" font-size="7">'.$str2.'</text>'."\n");
-				echo('<foreignObject x="'.($x+30).'" y="'.($y+13+7+($eventNum*14)).'" width="70" height="8">'.
-					'	<div style="width: 70;height: 8px;overflow: hidden;font-size: 8px;white-space: nowrap;font-family:\'Arial\';" title="'.$str1.'  '.$str2.'">'.$str2.'</div>'.
+				echo('<foreignObject x="'.($x+3).'" y="'.($y+13+7+($eventNum*10)).'" width="98" height="8">'.
+					'<div style="width: 98;height: 8px;overflow: hidden;font-size: 8px;white-space: nowrap;font-family:\'Arial\';" title="'.$str1.'  '.$str2.'">'.
+						'<b>'.$str1.'</b> '.$str2.
+					'</div>'.
 					'</foreignObject>');
 				
 				$eventNum++;
@@ -203,40 +227,73 @@ function drawDays(){
 	}
 }
 function drawEvents(){
-	global $eventsView;
+	global $eventsToView;
+	global $selected_date;
 	$i=0;
 	$xstart=50;
 	$ystart=50;
-	foreach($eventsView as $e){
+	foreach($eventsToView as $id=>$e){
 		$x=$xstart;
 		$y=$ystart+$i*100;
+		
+		
+		$textStartTime=minimalTimeDateTitle("$selected_date",$e["start"]);
+		$textEndTime=minimalTimeDateTitle("$selected_date",$e["ende"]);
+		
+		$isPublic=isset($e["isPublic"])&&$e["isPublic"];
+		
+		$isImage=isset($e["bildURL"])&&$e["bildURL"];
 		echo('<g class="event" opacity="1">');
-		echo('<text x="'.($x+20).'" y="'.($y+13).'" font-family="Arial" font-size="16" font-weight="bold">'.$e["uhrzeit_stunde"].":".$e["uhrzeit_minute"].'</text>'."\n");
-		echo('<text x="'.($x+100).'" y="'.($y+15).'" font-family="Arial" font-size="16">'.umlaute($e["name"]).'</text>'."\n");
-		echo('<image xlink:href="'.$e["bildURL"].'" x="'.$x.'" y="'.($y+20).'" height="79px" width="79px"/>'."\n");
+		if($isImage){
+			echo('<image fill="red" xlink:href="'.$e["bildURL"].'" x="'.$x.'" y="'.($y+20).'" height="79px" width="79px"/>'."\n");
+		}
 		echo('<rect class="border" name="" x="'.$x.'" y="'.$y.'" width="699" height="99" />'."\n");
 		
-		echo('<a class="link" target="_blank" href="editEvent.php?eventID='.$e["id"].'" onclick="openLinkN(\'editEvent.php?eventID='.$e["id"].'\')">');
+		echo('<a class="link" target="_blank" href="editEvent.php?eventID='.$id.'" onclick="openLinkN(\'editEvent.php?eventID='.$id.'\')">');
 			echo('<text x="'.($x+600).'" y="'.($y+13).'" font-family="Arial" font-size="12">bearbeiten</text>'."\n");
 		echo('</a>');
 		
 		/*
 		echo('<switch>'.
 			'<g requiredFeatures="http://www.w3.org/Graphics/SVG/feature/1.2/#TextFlow">'.
-			'	<textArea width="200" height="300">'.$e["beschreibung"].'</textArea>'.
+			'	<textArea width="200" height="300">'.$e["description"].'</textArea>'.
 			'</g>'.
 			'<foreignObject width="200" height="300">'.
-			'	<textArea xmlns="http://www.w3.org/1999/xhtml" style="width: 200px;height: 300px">'.$e["beschreibung"].'</textArea>'.
+			'	<textArea xmlns="http://www.w3.org/1999/xhtml" style="width: 200px;height: 300px">'.$e["description"].'</textArea>'.
 			'</foreignObject>'.
 		'</switch>');*/
-		echo('<foreignObject x="'.($x+90).'" y="'.($y+25).'" width="500" height="70">'.
-			'	<div style="width: 500px;height: 70px;overflow: auto;font-size: 14px;">'.$e["beschreibung"].'</div>'.
+		
+		echo('<foreignObject x="'.($x).'" y="'.($y).'" width="500" height="95">'.
+			'<div style="width: 500px;height: 42px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
+				'<b>'.$textStartTime.'</b> bis <b>'.$textEndTime.'</b>'.
+				($isPublic?"<b>[ist öffentlich]</b>":"").
+				'<br/>'.
+			'</div>'.
+			'</foreignObject>');
+		echo('<foreignObject x="'.($x+($isImage?90:0)).'" y="'.($y+20).'" width="'.($isImage?600:700).'" height="80">'.
+			'<div style="width: '.($isImage?600:700).'px;height: 21px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
+				'<span style="background-color: #bfffff;">'.
+					umlaute($e["name"]).
+				'</span>'.
+			'</div>'.
+			'<div style="width: '.($isImage?600:700).'px;height: 53px;overflow: auto;font-size: 14px;font-family: Arial, sans-serif;">'.	
+				str_replace("\n","<br/>",umlaute($e["description"])).
+			'</div>'.
 			'</foreignObject>');
 		echo('</g>');
 		$i++;
 	}
 }
 
+function minimalTimeDateTitle($selected_date,$dateTime){
+	if(str_starts_with($dateTime,"$selected_date")){
+		$dateTime=substr($dateTime,strlen($selected_date));
+	}
+	if(str_ends_with($dateTime,":00")){
+		$dateTime=substr($dateTime,0,-3);
+	}
+	return $dateTime;
+}
 
 function umlaute($text){ 
 	$returnvalue="";
@@ -315,9 +372,19 @@ function getMonthText($month){
 			return false;
 		}
 	</script>
+	<script>
+		<?php 
+		if(!$userName){
+			echo "".file_get_contents(__DIR__."/sendLongSession.js").""; 
+		}
+		?>
+	</script>
 </head>
 <body>
 	<?php 
+		if(!$userName){
+			echo '<b id="infoarea" style="background-color: aqua;"></b><br/>'; 
+		}
 		$width=800;
 		$height=((count($myDays)/7)+1)*100;//600 oder 700
 		echo('<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="'.$width.'" height="'.$height.'" viewBox="0 0 '.$width.' '.$height.'" >'."\n");
@@ -334,7 +401,7 @@ function getMonthText($month){
 			//timestamp:
 			echo('<text x="'.($width-140).'" y="'.($height-3).'" font-family="Arial" font-size="8">generiert am '.date('j.n.Y').' um '.date('H:i:s').'</text>'."\n");
 			//wochentage
-			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Montag".'</text>'."\n");
+			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."MonaTag".'</text>'."\n");
 			echo('<text x="'.(150+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Dinstag".'</text>'."\n");
 			echo('<text x="'.(250+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Mittwoch".'</text>'."\n");
 			echo('<text x="'.(350+15).'" y="'.(65).'" font-family="Arial" font-size="15">'."Donnerstag".'</text>'."\n");
@@ -347,11 +414,11 @@ function getMonthText($month){
 		
 		echo('<br />'."\n");
 		
-		$eventCount=count($eventsView);
+		$eventCount=count(array_keys($eventsToView));
 		$width=800;
 		$height=($eventCount)*100+50;
 		echo('<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="'.$width.'" height="'.$height.'" viewBox="0 0 '.$width.' '.$height.'" >'."\n");
-				$eventCount=count($eventsView);
+				$eventCount=count(array_keys($eventsToView));
 				
 				//Titel
 				$eventSufix=" am ".$selected_day.".".$month.".".$jear;
@@ -362,7 +429,16 @@ function getMonthText($month){
 				echo('<text x="'.(10).'" y="'.(40).'" font-family="Arial" font-size="35">'.$eventText.'</text>'."\n");
 				
 				//addButton
-				echo('<a class="link" target="_blank" href="editEvent/?id=0"><text x="'.($width-145).'" y="'.(15).'" font-family="Arial" font-size="14">neues Event erstellen</text></a>'."\n");
+				$setCreateDate="";
+				if(isset($_GET["j"])&&isset($_GET["m"])){
+					$setCreateDate="?j=".$_GET["j"]."&m=".$_GET["m"];
+					if(isset($_GET["d"])){
+						$setCreateDate.="&d=".$_GET["d"];
+					}else{
+						$setCreateDate.="&d=01";
+					}
+				}
+				echo('<a class="link" target="_blank" href="editEvent.php'.$setCreateDate.'"><text x="'.($width-145).'" y="'.(15).'" font-family="Arial" font-size="14">neues Event erstellen</text></a>'."\n");
 				
 				drawEvents();
 		echo('</svg>'."\n");
