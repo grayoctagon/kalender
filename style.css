@@ -41,9 +41,14 @@ button:hover {
 }
 .eventDetailsTitle{
 	background-color: #bfffff;
+	padding: 0 4px;
 }
 body.darkmodeActive .eventDetailsTitle{
 	background-color: #710000;
+}
+.eventOverviewTime{
+	opacity: 60%;
+	font-size: 80%;
 }
 
 .day .border{

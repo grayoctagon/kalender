@@ -207,15 +207,18 @@ function drawDays(){
 					}else{
 						$str1.="...";
 					}
+					if($str1=="00:00-23:59"){
+						$str1="<i>ganztags</i>";
+					}
 					$str2=umlaute($ev["name"]);
 				}else if($eventNum==7){
 					$str1='.. '.($eventCount-($eventNum))." more Events";
 				}
 				//echo('<text x="'.($x+3).'" y="'.($y+13+13+($eventNum*14)).'" font-family="Arial" font-size="10">'.$str1.'</text>'."\n");
 				//echo('<text x="'.($x+30).'" y="'.($y+13+13+($eventNum*14)).'" font-family="Arial" font-size="7">'.$str2.'</text>'."\n");
-				echo('<foreignObject x="'.($x+3).'" y="'.($y+13+7+($eventNum*10)).'" width="98" height="8">'.
-					'<div class="eventText" style="width: 98;height: 8px;overflow: hidden;font-size: 8px;white-space: nowrap;font-family:\'Arial\';" title="'.$str1.'  '.$str2.'">'.
-						'<b>'.$str1.'</b> '.$str2.
+				echo('<foreignObject x="'.($x+2).'" y="'.($y+13+7+($eventNum*10)).'" width="98" height="10">'.
+					'<div class="eventText" style="width: 98;height: 10px;overflow: hidden;font-size: 8px;white-space: nowrap;font-family:\'Arial\';" title="'.$str1.'  '.$str2.'">'.
+						'<b class="eventOverviewTime">'.$str1.'</b> '.$str2.
 					'</div>'.
 					'</foreignObject>');
 				
@@ -263,9 +266,16 @@ function drawEvents(){
 			'</foreignObject>'.
 		'</switch>');*/
 		
-		echo('<foreignObject x="'.($x).'" y="'.($y).'" width="500" height="95">'.
+		$times='<b>'.$textStartTime.'</b> bis <b>'.$textEndTime.'</b>';
+		if("$textStartTime"=="00:00"&&"$textEndTime"=="23:59:59"){
+			$times='<b><i>ganztags</i></b>';
+		}else{
+			//echo '<script>console.log(["'.$textStartTime.'","'.$textEndTime.'"])</script>';
+		}
+		
+		echo('<foreignObject x="'.($x+1).'" y="'.($y).'" width="500" height="95">'.
 			'<div style="width: 500px;height: 42px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
-				'<b>'.$textStartTime.'</b> bis <b>'.$textEndTime.'</b>'.
+				$times.
 				($isPublic?"<b>[ist öffentlich]</b>":"").
 				'<br/>'.
 			'</div>'.
@@ -292,6 +302,7 @@ function minimalTimeDateTitle($selected_date,$dateTime){
 	if(str_ends_with($dateTime,":00")){
 		$dateTime=substr($dateTime,0,-3);
 	}
+	$dateTime=trim($dateTime);
 	return $dateTime;
 }
 
