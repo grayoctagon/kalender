@@ -11,10 +11,12 @@ is partially german, partially english
 
 ## TODO: 
 - Verlauf anzeigen
+- Benachrichtigungen onChange/onCreate
 - Tags bearbeitbar machen, sodass 
 	+ man nach Tags Filtern kann, 
 	+ abhängig von Tags Farben/icons/design definieren kann.
 - Wochenansicht
+- Suchfunktion
 
 ## Example Pictures
 
