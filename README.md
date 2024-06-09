@@ -7,6 +7,7 @@ is partially german, partially english
 - Multi-User Login
 - Seperate Ansicht für nicht angemeldete User (inklusive Option Events als öffentlich zu markieren )
 - Bearbeitungs-Verlauf (wird aktuell notiert, aber ist nur manuell einzusehen, noch nicht für User)
+- Darkmode
 
 ## TODO: 
 - Verlauf anzeigen
@@ -19,6 +20,9 @@ is partially german, partially english
 
 so sieht es für nicht angemeldete User aus:
 ![Screenshot vom Kalender ohne angemeldet zu sein](/assetsForGit/exampleViewForNotLoggedInUsers.png)
+
+so sieht der Darkmode aus
+![Screenshot vom Kalender mit Darkmode ohne angemeldet zu sein](/assetsForGit/darkmode.png)
 
 so sieht der login aus:
 ![Screenshot vom Kalender ohne angemeldet zu sein](/assetsForGit/login.png)

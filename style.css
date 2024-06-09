@@ -1,4 +1,6 @@
-body {font-family: Arial, Helvetica, sans-serif;}
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
 form {border: 3px solid #f2f3f2;}
 input[type=text], input[type=password], textarea {
 	width: 100%;
@@ -30,6 +32,41 @@ button:hover {
 .container {
 	padding: 16px;
 }
+
+
+.event .border{
+	stroke-width:1px;
+	stroke:rgba(0, 0, 0, 0.1);
+	fill:rgba(0, 0, 0, 0);
+}
+.eventDetailsTitle{
+	background-color: #bfffff;
+}
+body.darkmodeActive .eventDetailsTitle{
+	background-color: #710000;
+}
+
+.day .border{
+	stroke-width:1px;
+	stroke:black;
+	fill:rgba(0, 0, 0, 0);
+	cursor: pointer;
+}
+.day:hover .border{
+	stroke:red;
+}
+.selectedday .border{
+	stroke:green;
+	fill:rgba(0, 0, 0, 0.2);
+}
+body.darkmodeActive .border{
+	stroke:white;
+}
+body.darkmodeActive .selectedday .border{
+	stroke:green;
+	fill:rgba(255, 255, 255, 0.2);
+}
+
 .mytag{
 	display:inline-block;
 	text-decoration: none;
@@ -39,3 +76,46 @@ button:hover {
 	margin: 2px;
     padding: 1px 4px;
 }
+.link{
+	stroke:black;
+	stroke-width:0.5px;
+	cursor: pointer;
+}
+.link:hover{
+	stroke:blue;
+	color:blue;
+}
+body.darkmodeActive .link{
+	stroke:white;
+	fill: darkred;
+}
+body.darkmodeActive .link:hover{
+	stroke:red;
+}
+body.darkmodeActive .ntext{
+	fill:white;
+}
+.borderRect{
+	stroke:black;
+}
+body.darkmodeActive .eventText{
+	color:white;
+}
+body.darkmodeActive .textDayNum{
+	fill:white;
+}
+
+body.darkmodeActive .borderRect{
+	stroke:white;
+}
+.darkmodeOption{
+	/* 
+	no style right now, just as a note. 
+	Elements with this class get the class "darkmodeActive" added when a user wishes to use darkmode 
+	*/
+}
+.darkmodeActive{
+	color:white;
+	background-color: black;
+}
+

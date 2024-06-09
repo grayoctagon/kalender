@@ -185,7 +185,7 @@ function drawDays(){
 		}
 		echo('<g class="day'.$addClass.'" opacity="'.$day["opacity"].'" overflow="hidden">');
 			echo('<rect class="border" name="day'.$i.'" x="'.$x.'" y="'.$y.'" width="99" height="99" />'."\n");
-			echo('<text x="'.($x+1).'" y="'.($y+13).'" font-family="Arial" font-size="12">'.$day["number"].'</text>'."\n");
+			echo('<text x="'.($x+1).'" y="'.($y+13).'" font-family="Arial" font-size="12" class="textDayNum">'.$day["number"].'</text>'."\n");
 			
 			//events
 			$eventCount=count($day["events"]);
@@ -214,7 +214,7 @@ function drawDays(){
 				//echo('<text x="'.($x+3).'" y="'.($y+13+13+($eventNum*14)).'" font-family="Arial" font-size="10">'.$str1.'</text>'."\n");
 				//echo('<text x="'.($x+30).'" y="'.($y+13+13+($eventNum*14)).'" font-family="Arial" font-size="7">'.$str2.'</text>'."\n");
 				echo('<foreignObject x="'.($x+3).'" y="'.($y+13+7+($eventNum*10)).'" width="98" height="8">'.
-					'<div style="width: 98;height: 8px;overflow: hidden;font-size: 8px;white-space: nowrap;font-family:\'Arial\';" title="'.$str1.'  '.$str2.'">'.
+					'<div class="eventText" style="width: 98;height: 8px;overflow: hidden;font-size: 8px;white-space: nowrap;font-family:\'Arial\';" title="'.$str1.'  '.$str2.'">'.
 						'<b>'.$str1.'</b> '.$str2.
 					'</div>'.
 					'</foreignObject>');
@@ -272,7 +272,7 @@ function drawEvents(){
 			'</foreignObject>');
 		echo('<foreignObject x="'.($x+($isImage?90:0)).'" y="'.($y+20).'" width="'.($isImage?600:700).'" height="80">'.
 			'<div style="width: '.($isImage?600:700).'px;height: 21px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
-				'<span style="background-color: #bfffff;">'.
+				'<span class="eventDetailsTitle">'.
 					umlaute($e["name"]).
 				'</span>'.
 			'</div>'.
@@ -334,33 +334,7 @@ function getMonthText($month){
 <head>
 	<title>Kalender</title>
 	<style>
-	.event .border{
-		stroke-width:1px;
-		stroke:rgba(0, 0, 0, 0.1);
-		fill:rgba(0, 0, 0, 0);
-	}
-	.day .border{
-		stroke-width:1px;
-		stroke:black;
-		fill:rgba(0, 0, 0, 0);
-		cursor: pointer;
-	}
-	.day:hover .border{
-		stroke:red;
-	}
-	.selectedday .border{
-		stroke:green;
-		fill:rgba(0, 0, 0, 0.2);
-	}
-	.link{
-		stroke:black;
-		stroke-width:0.5px;
-		cursor: pointer;
-	}
-	.link:hover{
-		stroke:blue;
-		color:blue;
-	}
+	<?php echo file_get_contents(__DIR__."/style.css"); ?>
 	</style>
 	<script type="text/javascript">
 		function openLink(url){
@@ -377,10 +351,11 @@ function getMonthText($month){
 		if(!$userName){
 			echo "".file_get_contents(__DIR__."/sendLongSession.js").""; 
 		}
+		echo "".file_get_contents(__DIR__."/main.js").""; 
 		?>
 	</script>
 </head>
-<body>
+<body class="darkmodeOption">
 	<?php 
 		if(!$userName){
 			echo '<b id="infoarea" style="background-color: aqua;"></b><br/>'; 
@@ -389,25 +364,30 @@ function getMonthText($month){
 		$height=((count($myDays)/7)+1)*100;//600 oder 700
 		echo('<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="'.$width.'" height="'.$height.'" viewBox="0 0 '.$width.' '.$height.'" >'."\n");
 			
-			echo('<rect x="1" y="1" width="'.($width-2).'" height="'.($height-2).'" stroke="black" stroke-width="1px" fill="none"/>'."\n");
+			echo('<rect x="1" y="1" width="'.($width-2).'" height="'.($height-2).'" class="borderRect" stroke-width="1px" fill="none"/>'."\n");
 			
 			
-			echo('<text x="'.(350).'" y="'.(40).'" font-family="Arial" font-size="14">'.$note.'</text>'."\n");
+			echo('<text x="'.(420).'" y="'.(40).'" font-family="Arial" font-size="14" class="ntext textNote">'.$note.'</text>'."\n");
+			echo('<text x="'.(420).'" y="'.(20).'" font-family="Arial" font-size="14" '.
+			'class="link ntext" '.
+				'id="darkmodeindicator" onclick="toggleDarkmode()">'.
+					"darkmode: ".
+				'</text>'."\n");
 			//blaetterbuttons
 			echo('<a class="link" href="'.$letztesMonatLink.'" onclick="openLink(\''.$letztesMonatLink.'\')"><text x="'.(10).'" y="'.(40).'" font-family="Arial" font-size="14">&lt; '.$letztesMonatText.'</text></a>'."\n");
 			echo('<a class="link" href="'.$naechstesMonatLink.'" onclick="openLink(\''.$naechstesMonatLink.'\')"><text x="'.($width-90).'" y="'.(40).'" font-family="Arial" font-size="14">'.$naechstesMonatText.'&gt;</text></a>'."\n");
 			//Titel
-			echo('<text x="'.(150).'" y="'.(40).'" font-family="Arial" font-size="35">'.$aktuellesMonatText.'</text>'."\n");
+			echo('<text x="'.(150).'" y="'.(40).'" font-family="Arial" font-size="35" class="ntext textAktuellesMonat">'.$aktuellesMonatText.'</text>'."\n");
 			//timestamp:
-			echo('<text x="'.($width-140).'" y="'.($height-3).'" font-family="Arial" font-size="8">generiert am '.date('j.n.Y').' um '.date('H:i:s').'</text>'."\n");
+			echo('<text x="'.($width-275).'" y="'.($height-10).'" font-family="Arial" font-size="16" class="ntext">generiert am '.date('d.m.Y').' um '.date('H:i:s').'</text>'."\n");
 			//wochentage
-			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."MonaTag".'</text>'."\n");
-			echo('<text x="'.(150+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Dinstag".'</text>'."\n");
-			echo('<text x="'.(250+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Mittwoch".'</text>'."\n");
-			echo('<text x="'.(350+15).'" y="'.(65).'" font-family="Arial" font-size="15">'."Donnerstag".'</text>'."\n");
-			echo('<text x="'.(450+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Freitag".'</text>'."\n");
-			echo('<text x="'.(550+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Samstag".'</text>'."\n");
-			echo('<text x="'.(650+25).'" y="'.(65).'" font-family="Arial" font-size="15">'."Sonntag".'</text>'."\n");
+			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."MonaTag".'</text>'."\n");
+			echo('<text x="'.(150+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Dinstag".'</text>'."\n");
+			echo('<text x="'.(250+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Mittwoch".'</text>'."\n");
+			echo('<text x="'.(350+15).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Donnerstag".'</text>'."\n");
+			echo('<text x="'.(450+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Freitag".'</text>'."\n");
+			echo('<text x="'.(550+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Samstag".'</text>'."\n");
+			echo('<text x="'.(650+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Sonntag".'</text>'."\n");
 			drawDays();
 		echo('</svg>'."\n");
 		
