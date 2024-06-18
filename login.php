@@ -1,6 +1,6 @@
 <?php
 if(session_status() !== PHP_SESSION_ACTIVE) session_start([
-    'cookie_lifetime' => 86400
+	'cookie_lifetime' => 86400
 ]);
 
 if(isset($_POST["logout"])){

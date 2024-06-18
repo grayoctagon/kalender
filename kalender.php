@@ -277,10 +277,11 @@ function drawEvents(){
 			'<div style="width: 500px;height: 42px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
 				$times.
 				($isPublic?"<b>[ist öffentlich]</b>":"").
+				"&nbsp;<div class=\"tagGroup\">$tags</div>".
 				'<br/>'.
 			'</div>'.
 			'</foreignObject>');
-		echo('<foreignObject x="'.($x+($isImage?90:0)).'" y="'.($y+20).'" width="'.($isImage?600:700).'" height="80">'.
+		echo('<foreignObject x="'.($x+($isImage?90:0)).'" y="'.($y+23).'" width="'.($isImage?600:700).'" height="80">'.
 			'<div style="width: '.($isImage?600:700).'px;height: 21px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
 				'<span class="eventDetailsTitle">'.
 					umlaute($e["name"]).
@@ -393,7 +394,7 @@ function getMonthText($month){
 			echo('<text x="'.($width-275).'" y="'.($height-10).'" font-family="Arial" font-size="16" class="ntext">generiert am '.date('d.m.Y').' um '.date('H:i:s').'</text>'."\n");
 			//wochentage
 			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."MonaTag".'</text>'."\n");
-			echo('<text x="'.(150+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Dinstag".'</text>'."\n");
+			echo('<text x="'.(150+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Dienstag".'</text>'."\n");
 			echo('<text x="'.(250+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Mittwoch".'</text>'."\n");
 			echo('<text x="'.(350+15).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Donnerstag".'</text>'."\n");
 			echo('<text x="'.(450+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Freitag".'</text>'."\n");

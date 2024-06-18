@@ -1,28 +1,23 @@
 <?php 
 $eventsDir=__DIR__."/"."events/";
 
+include(__DIR__."/helper.php");
 
 date_default_timezone_set('Europe/Vienna');
+if(!isset($_SESSION)) 
 session_start([
     'cookie_lifetime' => 86400
 ]);
-$userName=checkLogin();
+$userName=checkLogin(false);
 
 
-function checkLogin(){
-	if(isset($_SESSION["kalenterlogin"]) && $_SESSION["kalenterlogin"]){
-		return $_SESSION["kalenterlogin"];
-	}else{
-		return false;
-	}
-}
 function getEvent($eName){
 	global $eventsDir;
 	if(!file_exists($eventsDir.$eName)){
 		return false;
 	}
 	$fullObj=json_decode(file_get_contents($eventsDir.$eName),true);
-	if(checkLogin())
+	if(checkLogin(false))
 		return $fullObj;
 	if(isset($fullObj["isPublic"])&&$fullObj["isPublic"])
 		return $fullObj;
@@ -84,15 +79,5 @@ function getAllEventIDs(){
 }
 
 
-
-
-
-
-function datetimeStringToStamp($dateString){
-	return DateTime::createFromFormat("Y-m-d H:i:s",$dateString)->getTimestamp();
-}
-function dateStringToStamp($dateString){
-	return DateTime::createFromFormat("Y-m-d",$dateString)->getTimestamp();
-}
 
 ?>

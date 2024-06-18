@@ -74,7 +74,7 @@ function getTagObjects(){
 	let myCount=0;
 	tags.forEach(t=>{
 		if(myCount<maxTagAmount)
-			newTags.push(t.substring(0,maxTagLength).replaceAll('<', '').replaceAll('>', '').toLowerCase());
+			newTags.push(t.substring(0,maxTagLength).replaceAll(/[^a-z0-9_]/gm, '').toLowerCase());
 		myCount++;
 	});
 	return newTags;

@@ -33,7 +33,7 @@ if(longsession){
 			}
 		};
 		
-		xhttp.open("POST", "login.php?resumelongsession="+JSON.parse(atob(localStorage.getItem("kalenderLongSession")))["longSessionID"], true);
+		xhttp.open("POST", "/kalender/login.php?resumelongsession="+JSON.parse(atob(localStorage.getItem("kalenderLongSession")))["longSessionID"], true);
 		xhttp.send(formDataSend);
 	}, 500);
 }

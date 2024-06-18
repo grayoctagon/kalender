@@ -78,8 +78,8 @@ body.darkmodeActive .selectedday .border{
 	color:black;
 	border: black solid 1px;
 	border-radius: 5px;
-	margin: 2px;
-    padding: 1px 4px;
+	margin: 0px 2px;
+    padding: 0px 4px;
 }
 .link{
 	stroke:black;

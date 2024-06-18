@@ -1,19 +1,12 @@
 <?php
 date_default_timezone_set('Europe/Vienna');
 session_start([
-    'cookie_lifetime' => 86400
+	'cookie_lifetime' => 86400
 ]);
+include(__DIR__."/helper.php");
+
 $userName=checkLogin();
 
-$myglobals=array(
-	"maxDescLength"=>(16*1024),
-	"maxTitleLength"=>200,
-	"maxLocationLength"=>(4*1024),
-	"maxSourceIDLength"=>(200),
-	"maxBildLength"=>(16*1024),
-	"maxTagLength"=>(50),
-	"maxTagAmount"=>(100)
-);
 
 $eventID=0;
 $eventObj=false;
@@ -144,7 +137,7 @@ function sanaticeEvent($inputUserChanges,$recentEvent=false){
 					if(is_array($value)){
 						foreach ($value as $tag) {
 							if($myCount<$myglobals["maxTagAmount"]){
-								$neueTags[]=reduceStringtoLength($tag,$myglobals["maxTagLength"]);
+								$neueTags[]=sanaticeTagName($tag);
 							}
 							$myCount++;
 						}
@@ -162,13 +155,6 @@ function sanaticeEvent($inputUserChanges,$recentEvent=false){
 	
 }
 
-function reduceStringtoLength($input,$length){
-	$input="".$input;
-	if(strlen($input)>$length){
-		$input=substr($input,0,$length);
-	}
-	return $input;
-}
 
 function getWriteableAttributes(){
 	return array_keys(getEvent(false));
@@ -247,15 +233,6 @@ function getWriteableDifferenceObj($oldEvent,$newEvent){
 	return $changes;
 }
 
-function checkLogin(){
-	if(isset($_SESSION["kalenterlogin"]) && $_SESSION["kalenterlogin"]){
-		return $_SESSION["kalenterlogin"];
-	}else{
-		http_response_code(401);//401: Unauthorized 	
-		include (__DIR__."/login.php");
-		die();
-	}
-}
 function getEvent($eventID=false){
 	$file=__DIR__."/"."events/".$eventID;
 	$return=getBlankEvent();
@@ -285,12 +262,6 @@ function getBlankEvent(){
 	);
 }
 
-function datetimeStringToStamp($dateString){
-	return DateTime::createFromFormat("Y-m-d H:i:s",$dateString)->getTimestamp();
-}
-function dateStringToStamp($dateString){
-	return DateTime::createFromFormat("Y-m-d",$dateString)->getTimestamp();
-}
 
 ?><!DOCTYPE html>
 <html>
@@ -376,7 +347,7 @@ function dateStringToStamp($dateString){
 		<label for="tags"><b>
 			Tags:
 		</b></label>
-		<input id="tagInput" type="text" onblur="reRenderTags()" oninput="redrawTags()" value="<?php echo htmlspecialchars(implode(",",$eventObj["tags"])) ?>" placeholder="Tags,Taggs,Taaags" name="tags" maxlength="<?php echo $myglobals["maxTagAmount"]*$myglobals["maxTagLength"]; ?>" pattern="[a-zA-Z0-9_,]+$">
+		<input id="tagInput" type="text" onblur="reRenderTags()" oninput="redrawTags()" value="<?php echo htmlspecialchars(implode(",",$eventObj["tags"])) ?>" placeholder="Tags,Taggs,Taaags" name="tags" maxlength="<?php echo $myglobals["maxTagAmount"]*$myglobals["maxTagLength"]; ?>" pattern="[a-z0-9_,]+$">
 		Vorschau: <div id="tagarea"></div>
 		
 		<button type="button" id="saveBtn" onclick="saveEvent()">speichern</button>
