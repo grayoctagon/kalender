@@ -45,4 +45,9 @@ function sanaticeTagName($inputTag){
 	return reduceStringtoLength($inputTag,$myglobals["maxTagLength"]);
 }
 
+function umlaute($text){ 
+	$returnvalue="";
+	return htmlspecialchars($text);
+}
+
 ?>

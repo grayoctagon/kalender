@@ -66,6 +66,31 @@ function get2AllEvents(){
 	}
 	return $events;
 }
+function getTaggedEvents($tag=false){
+	$allEvents=get2AllEvents();
+	$toReturn=array();
+	foreach ($allEvents as $id=>$event) {
+		$hasTags=false;
+		if(isset($event["tags"])&&count($event["tags"])>0){
+			if(!json_encode($event["tags"])=='[""]'){
+				$hasTags=true;
+			}
+		}
+		if(!$tag&&!$hasTags){
+			$toReturn[$id]=$event;
+		}else{
+			$found=false;
+			foreach ($event["tags"] as $value) {
+				if($value==$tag)
+					$found=true;
+			}
+			if($found){
+				$toReturn[$id]=$event;
+			}
+		}
+	}
+	return $toReturn;
+}
 function getAllEventIDs(){
 	global $eventsDir;
 	$files=array();

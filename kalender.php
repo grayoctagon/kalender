@@ -272,6 +272,16 @@ function drawEvents(){
 		}else{
 			//echo '<script>console.log(["'.$textStartTime.'","'.$textEndTime.'"])</script>';
 		}
+		$tags="";
+		if(isset($e["tags"])){
+			//$tags="". json_encode($e["tags"]);
+			foreach ($e["tags"] as $tag) {
+				if($tag)
+					$tags.='<a href="editTag.php?name='.$tag.'" target="_blank" class="mytag">'.
+						$tag.
+					'</a>';
+			}
+		}
 		
 		echo('<foreignObject x="'.($x+1).'" y="'.($y).'" width="500" height="95">'.
 			'<div style="width: 500px;height: 42px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
@@ -305,11 +315,6 @@ function minimalTimeDateTitle($selected_date,$dateTime){
 	}
 	$dateTime=trim($dateTime);
 	return $dateTime;
-}
-
-function umlaute($text){ 
-	$returnvalue="";
-	return htmlspecialchars($text);
 }
 
 function getMonthText($month){

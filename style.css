@@ -81,6 +81,13 @@ body.darkmodeActive .selectedday .border{
 	margin: 0px 2px;
     padding: 0px 4px;
 }
+.mytag:hover{
+	border: red solid 1px;
+}
+.tagGroup{
+	display:inline-block;
+}
+
 .link{
 	stroke:black;
 	stroke-width:0.5px;
