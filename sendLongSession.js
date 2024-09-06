@@ -20,8 +20,16 @@ if(longsession){
 				
 				
 				if(myJson.status=="success"){
-					infoarea.innerText="Session erfolgreich verlängert, lade in 3 sek neu  ";
-					setTimeout(()=>{window.location = window.location.href;},3000);
+					infoarea.innerText="Session erfolgreich verlängert"+(window.sendLongSessionNoWindowReload?"":", lade in 3 sek neu  ");
+					
+					setTimeout(()=>{
+						if(!window.sendLongSessionNoWindowReload){
+							window.location = window.location.href;
+						}else{
+							infoarea.innerText="";
+						}
+						},3000);
+					
 					if(myJson.additionalMessage)
 						infoarea.innerText=infoarea.innerText+"\n"+myJson.additionalMessage;
 				}else{
