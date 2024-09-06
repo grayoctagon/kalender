@@ -12,6 +12,7 @@ $userName=checkLogin(false);
 
 
 function getEvent($eName){
+	debugLog();
 	global $eventsDir;
 	if(!file_exists($eventsDir.$eName)){
 		return false;
@@ -30,6 +31,7 @@ function getEvent($eName){
 	return $return;
 }
 function getEventsOn($day){
+	debugLog();
 	$allEvents=get2AllEvents();
 	$ret=array();
 	$dayStartT=datetimeStringToStamp($day." 00:00:00");
@@ -58,12 +60,17 @@ function getEventsOn($day){
 	});
 	return $ret;
 }
+$myCacheForGet2AllEvents=null;
 function get2AllEvents(){
+	debugLog();
+	global $myCacheForGet2AllEvents;
+	if($myCacheForGet2AllEvents!==null)return $myCacheForGet2AllEvents;
 	$eNames=getAllEventIDs();
 	$events=array();
 	foreach ($eNames as $eName) {
 		$events[$eName]=getEvent($eName);
 	}
+	$myCacheForGet2AllEvents=$events;
 	return $events;
 }
 function sortElementsByStart(&$elements){
