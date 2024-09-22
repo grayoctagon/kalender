@@ -398,7 +398,9 @@ function getMonthText($month){
 			//timestamp:
 			echo('<text x="'.($width-275).'" y="'.($height-10).'" font-family="Arial" font-size="16" class="ntext">generiert am '.date('d.m.Y').' um '.date('H:i:s').'</text>'."\n");
 			//wochentage
-			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."MonaTag".'</text>'."\n");
+			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."MonaTag".
+				'<!-- Hinweis: "MonaTag" ist kein Tippfehler. Es ist absichtlich so geschrieben, als Zeichen der Wertschätzung für meine Freundin Mona. -->'.
+				'</text>'."\n");
 			echo('<text x="'.(150+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Dienstag".'</text>'."\n");
 			echo('<text x="'.(250+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Mittwoch".'</text>'."\n");
 			echo('<text x="'.(350+15).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."Donnerstag".'</text>'."\n");
