@@ -87,7 +87,20 @@ body.darkmodeActive .selectedday .border{
 .tagGroup{
 	display:inline-block;
 }
-
+.changeEntry{
+	margin-left: 4px;
+}
+.hilightAble{
+	background-color: #ccc;
+	border: rgba(0, 0, 0, 0) solid 1px;
+}
+pre.hilightAble{
+	overflow: auto;
+}
+.hilightAble:hover{
+	background-color: #999;
+	border: black solid 1px;
+}
 .link{
 	stroke:black;
 	stroke-width:0.5px;

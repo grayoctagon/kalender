@@ -8,12 +8,12 @@ is partially german, partially english
 - Seperate Ansicht für nicht angemeldete User (inklusive Option Events als öffentlich zu markieren )
 - Bearbeitungs-Verlauf (wird aktuell notiert, aber ist nur manuell einzusehen, noch nicht für User)
 - Darkmode
+- Verlauf anzeigen
 
 ## TODO: 
-- Verlauf anzeigen
 - Benachrichtigungen onChange/onCreate
 - Tags bearbeitbar machen, sodass 
-	+ man nach Tags Filtern kann, 
+	+ man nach Tags Filtern kann, (teilweise implementiert)
 	+ abhängig von Tags Farben/icons/design definieren kann.
 - Wochenansicht
 - Suchfunktion

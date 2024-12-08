@@ -283,8 +283,8 @@ function drawEvents(){
 			}
 		}
 		
-		echo('<foreignObject x="'.($x+1).'" y="'.($y).'" width="500" height="95">'.
-			'<div style="width: 500px;height: 42px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
+		echo('<foreignObject x="'.($x+1).'" y="'.($y).'" width="590" height="95">'.
+			'<div style="width: 590px;height: 42px;overflow: auto;font-size: 18px;font-family: Arial, sans-serif;">'.
 				$times.
 				($isPublic?"<b>[ist öffentlich]</b>":"").
 				"&nbsp;<div class=\"tagGroup\">$tags</div>".
@@ -397,6 +397,11 @@ function getMonthText($month){
 			echo('<text x="'.(150).'" y="'.(40).'" font-family="Arial" font-size="35" class="ntext textAktuellesMonat">'.$aktuellesMonatText.'</text>'."\n");
 			//timestamp:
 			echo('<text x="'.($width-275).'" y="'.($height-10).'" font-family="Arial" font-size="16" class="ntext">generiert am '.date('d.m.Y').' um '.date('H:i:s').'</text>'."\n");
+			//menu:
+			echo(	'<a class="link" href="history.php" >'.
+					'<text x="5" y="'.($height-10).'" font-family="Arial" font-size="16" class="ntext">Verlauf'.'</text>'.
+					'</a>'.
+					"\n");
 			//wochentage
 			echo('<text x="'.(50+25).'" y="'.(65).'" font-family="Arial" font-size="15" class="textWeekday ntext">'."MonaTag".
 				'<!-- Hinweis: "MonaTag" ist kein Tippfehler. Es ist absichtlich so geschrieben, als Zeichen der Wertschätzung für meine Freundin Mona. -->'.
