@@ -41,44 +41,7 @@ if($showElements){
 	echo '<h2>'.$eventText.($tagName?" mit dem Tag $tagName":" ohne Tag ").' </h2>';
 	echo '<div class="eventList">';
 	foreach ($eventsToView as $id => $event) {
-		$textStartTime=$event["start"];
-		$textEndTime=$event["ende"];
-		$ganztags=false;
-		if(explode(" ",$textStartTime)[0]==explode(" ",$textEndTime)[0]){
-			if(explode(" ",$textStartTime)[1]=="00:00:00"&&explode(" ",$textEndTime)[1]=="23:59:59"){
-				$ganztags=true;
-			}
-			$textEndTime=explode(" ",$textEndTime)[1];
-		}
-		$isPublic=isset($event["isPublic"])&&$event["isPublic"];
-		$isImage=isset($event["bildURL"])&&$event["bildURL"];
-		
-		
-		$tags="";
-		if(isset($event["tags"])){
-			foreach ($event["tags"] as $tag) {
-				if($tag)
-					$tags.='<a href="editTag.php?name='.umlaute($tag).'" target="_blank" class="mytag">'.
-						umlaute($tag).
-					'</a>';
-			}
-		}
-		
-		echo '<div class="eventFromList" style="border: black solid 1px;margin:0 0 2px;">';
-			echo '<b>'.($ganztags?(explode(" ",$textStartTime)[0]." ganztags"):($textStartTime.'</b> bis <b>'.$textEndTime)).'</b>';
-			echo ($isPublic?" <b>[ist öffentlich]</b>":"");
-			echo '<div class="tagGroup">'.$tags.'</div><br/>';
-			echo '<span class="eventDetailsTitle">'.umlaute($event["name"]).'</span>';
-			echo 	'<a class="link" target="_blank" href="editEvent.php?eventID='.$id.'">
-						bearbeiten
-					</a>';
-			echo '<br/>';
-			if($isImage){
-				echo('<img fill="red" src="'.$event["bildURL"].'" height="100px" width="100px"/>'."\n");
-			}
-			$mheight=min(250,max(40,5+20*substr_count($event["description"],"\n")));
-			echo '<pre style="margin: 0px;width: 100%;display: inline-block;height: '.$mheight.'px;overflow: auto;font-size: 14px;font-family: Arial, sans-serif;">'.umlaute($event["description"]).'</pre>';
-		echo '</div>';
+		echo makeTag($id, $event);
 	}
 	echo '</div>';
 }

@@ -194,6 +194,47 @@ function drawTimeline() {
 
 	echo "<!-- hi -->".$svg;
 }
-
+function makeTag($id,$event){
+	$return="";
+	$textStartTime=$event["start"];
+	$textEndTime=$event["ende"];
+	$ganztags=false;
+	if(explode(" ",$textStartTime)[0]==explode(" ",$textEndTime)[0]){
+		if(explode(" ",$textStartTime)[1]=="00:00:00"&&explode(" ",$textEndTime)[1]=="23:59:59"){
+			$ganztags=true;
+		}
+		$textEndTime=explode(" ",$textEndTime)[1];
+	}
+	$isPublic=isset($event["isPublic"])&&$event["isPublic"];
+	$isImage=isset($event["bildURL"])&&$event["bildURL"];
+	
+	
+	$tags="";
+	if(isset($event["tags"])){
+		foreach ($event["tags"] as $tag) {
+			if($tag)
+				$tags.='<a href="editTag.php?name='.umlaute($tag).'" target="_blank" class="mytag">'.
+					umlaute($tag).
+				'</a>';
+		}
+	}
+	
+	$return .= '<div class="eventFromList" style="border: black solid 1px;margin:0 0 2px;">';
+		$return .= '<b>'.($ganztags?(explode(" ",$textStartTime)[0]." ganztags"):($textStartTime.'</b> bis <b>'.$textEndTime)).'</b>';
+		$return .= ($isPublic?" <b>[ist öffentlich]</b>":"");
+		$return .= '<div class="tagGroup">'.$tags.'</div><br/>';
+		$return .= '<span class="eventDetailsTitle">'.umlaute($event["name"]).'</span>';
+		$return .= 	'<a class="link" target="_blank" href="editEvent.php?eventID='.$id.'">
+					bearbeiten
+				</a>';
+				$return .= '<br/>';
+		if($isImage){
+			$return .=('<img fill="red" src="'.$event["bildURL"].'" height="100px" width="100px"/>'."\n");
+		}
+		$mheight=min(250,max(40,5+20*substr_count($event["description"],"\n")));
+		$return .= '<pre style="margin: 0px;width: 100%;display: inline-block;height: '.$mheight.'px;overflow: auto;font-size: 14px;font-family: Arial, sans-serif;">'.umlaute($event["description"]).'</pre>';
+	$return .= '</div>';
+	return $return;
+}
 
 ?>
